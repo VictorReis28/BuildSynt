@@ -9,7 +9,7 @@ const HeroSection: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
       id="home"
-      className="min-h-screen flex items-center justify-center px-4 pt-20"
+      className="h-screen flex items-center justify-center px-4 pt-20 pb-8"
     >
       <div className="max-w-4xl mx-auto text-center">
         <motion.div

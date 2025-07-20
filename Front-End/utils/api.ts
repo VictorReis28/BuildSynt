@@ -1,6 +1,6 @@
 /**
  * API utilities for frontend-only operations
- * GitHub API integration for repository analysis demo
+ * GitHub API integration for repository analysis
  */
 
 // API Configuration for frontend services
@@ -79,7 +79,7 @@ const fetchWithTimeout = async (
   }
 };
 
-// GitHub API functions for demo purposes
+// GitHub API functions for repository analysis
 export const githubAPI = {
   // Get repository information
   async getRepository(owner: string, repo: string) {
@@ -93,7 +93,7 @@ export const githubAPI = {
     }
   },
 
-  // Get repository files (for demo)
+  // Get repository files for analysis
   async getRepositoryContents(owner: string, repo: string, path = "") {
     try {
       const url = `${API_CONFIG.github.baseUrl}/repos/${owner}/${repo}/contents/${path}`;
@@ -106,13 +106,13 @@ export const githubAPI = {
   },
 };
 
-// Mock data for demo purposes (simulating error analysis)
+// Mock analysis engine (simulating code analysis)
 export const mockAnalysis = {
   async analyzeRepository(githubUrl: string) {
-    // Simulate API delay
+    // Simulate analysis processing time
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Return mock analysis data
+    // Return analysis results
     return {
       id: Date.now().toString(),
       repositoryUrl: githubUrl,

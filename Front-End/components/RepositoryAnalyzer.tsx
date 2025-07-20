@@ -80,7 +80,7 @@ const RepositoryAnalyzer: React.FC = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
       id="analyzer"
-      className="py-20 px-4"
+      className="py-8 px-4"
     >
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-12">

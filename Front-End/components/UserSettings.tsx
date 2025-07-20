@@ -1,56 +1,56 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import IconComponent from './IconComponent';
-import LoadingSpinner from './LoadingSpinner';
-import { validateEmail, validateName } from '../utils/validation';
-import { sanitizeInput } from '../utils/security';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import IconComponent from "./IconComponent";
+import LoadingSpinner from "./LoadingSpinner";
+import { validateEmail, validateName } from "../utils/validation";
+import { sanitizeInput } from "../utils/security";
 
 interface UserSettingsProps {
   onClose?: () => void;
 }
 
 const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
   // Profile settings state
   const [profileData, setProfileData] = useState({
-    displayName: 'João Silva',
-    username: 'joao.silva',
-    email: 'joao.silva@exemplo.com',
-    bio: 'Desenvolvedor apaixonado por tecnologia e inovação.',
-    location: 'São Paulo, Brasil',
+    displayName: "João Silva",
+    username: "joao.silva",
+    email: "joao.silva@buildsynt.dev",
+    bio: "Desenvolvedor especializado em análise de código e qualidade de software.",
+    location: "São Paulo, Brasil",
     socialLinks: {
-      github: 'https://github.com/joaosilva',
-      linkedin: 'https://linkedin.com/in/joaosilva',
-      twitter: ''
-    }
+      github: "https://github.com/joaosilva",
+      linkedin: "https://linkedin.com/in/joaosilva",
+      twitter: "",
+    },
   });
 
   // Preferences state
   const [preferences, setPreferences] = useState({
-    language: 'pt-BR',
-    timezone: 'America/Sao_Paulo',
+    language: "pt-BR",
+    timezone: "America/Sao_Paulo",
     notifications: {
       newMessages: true,
       updates: true,
-      marketing: false
+      marketing: false,
     },
     privacy: {
-      profileVisibility: 'public',
+      profileVisibility: "public",
       showOnlineStatus: true,
-      whoCanContact: 'everyone'
+      whoCanContact: "everyone",
     },
     theme: {
-      mode: 'dark',
-      colorScheme: 'blue'
+      mode: "dark",
+      colorScheme: "blue",
     },
     accessibility: {
-      fontSize: 'medium',
+      fontSize: "medium",
       highContrast: false,
-      screenReader: false
-    }
+      screenReader: false,
+    },
   });
 
   // Security state
@@ -59,56 +59,60 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
     passwordRequirements: {
       minLength: 8,
       requireSpecialChars: true,
-      requireNumbers: true
-    }
+      requireNumbers: true,
+    },
   });
 
   const tabs = [
-    { id: 'profile', label: 'Perfil', icon: 'user' },
-    { id: 'preferences', label: 'Preferências', icon: 'settings' },
-    { id: 'security', label: 'Segurança', icon: 'shield' },
-    { id: 'privacy', label: 'Dados & Privacidade', icon: 'lock' }
+    { id: "profile", label: "Perfil", icon: "user" },
+    { id: "preferences", label: "Preferências", icon: "settings" },
+    { id: "security", label: "Segurança", icon: "shield" },
+    { id: "privacy", label: "Dados & Privacidade", icon: "lock" },
   ];
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       // TODO: Backend Integration - Save user settings
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setHasChanges(false);
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.error("Error saving settings:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleProfileChange = (field: string, value: string) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
-      [field]: sanitizeInput.text(value)
+      [field]: sanitizeInput.text(value),
     }));
     setHasChanges(true);
   };
 
   const handleSocialLinkChange = (platform: string, value: string) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
       socialLinks: {
         ...prev.socialLinks,
-        [platform]: sanitizeInput.url(value)
-      }
+        [platform]: sanitizeInput.url(value),
+      },
     }));
     setHasChanges(true);
   };
 
-  const handlePreferenceChange = (category: string, field: string, value: any) => {
-    setPreferences(prev => ({
+  const handlePreferenceChange = (
+    category: string,
+    field: string,
+    value: any
+  ) => {
+    setPreferences((prev) => ({
       ...prev,
       [category]: {
         ...prev[category as keyof typeof prev],
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
     setHasChanges(true);
   };
@@ -117,7 +121,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
     <div className="space-y-8">
       {/* Profile Picture */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Foto do Perfil</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Foto do Perfil
+        </h3>
         <div className="flex items-center gap-6">
           <div className="relative">
             <img
@@ -142,7 +148,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Basic Information */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Informações Básicas</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Informações Básicas
+        </h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -151,7 +159,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="text"
               value={profileData.displayName}
-              onChange={(e) => handleProfileChange('displayName', e.target.value)}
+              onChange={(e) =>
+                handleProfileChange("displayName", e.target.value)
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -162,7 +172,7 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="text"
               value={profileData.username}
-              onChange={(e) => handleProfileChange('username', e.target.value)}
+              onChange={(e) => handleProfileChange("username", e.target.value)}
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -173,7 +183,7 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="email"
               value={profileData.email}
-              onChange={(e) => handleProfileChange('email', e.target.value)}
+              onChange={(e) => handleProfileChange("email", e.target.value)}
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -184,20 +194,20 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="text"
               value={profileData.location}
-              onChange={(e) => handleProfileChange('location', e.target.value)}
+              onChange={(e) => handleProfileChange("location", e.target.value)}
               placeholder="Cidade, País"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
-        
+
         <div className="mt-4">
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Bio (máx. 150 caracteres)
           </label>
           <textarea
             value={profileData.bio}
-            onChange={(e) => handleProfileChange('bio', e.target.value)}
+            onChange={(e) => handleProfileChange("bio", e.target.value)}
             maxLength={150}
             rows={3}
             className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
@@ -219,7 +229,7 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="url"
               value={profileData.socialLinks.github}
-              onChange={(e) => handleSocialLinkChange('github', e.target.value)}
+              onChange={(e) => handleSocialLinkChange("github", e.target.value)}
               placeholder="https://github.com/seuusuario"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -231,7 +241,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="url"
               value={profileData.socialLinks.linkedin}
-              onChange={(e) => handleSocialLinkChange('linkedin', e.target.value)}
+              onChange={(e) =>
+                handleSocialLinkChange("linkedin", e.target.value)
+              }
               placeholder="https://linkedin.com/in/seuusuario"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -243,7 +255,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             <input
               type="url"
               value={profileData.socialLinks.twitter}
-              onChange={(e) => handleSocialLinkChange('twitter', e.target.value)}
+              onChange={(e) =>
+                handleSocialLinkChange("twitter", e.target.value)
+              }
               placeholder="https://twitter.com/seuusuario"
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -268,7 +282,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
     <div className="space-y-8">
       {/* Language & Region */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Idioma e Região</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Idioma e Região
+        </h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -276,7 +292,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.language}
-              onChange={(e) => handlePreferenceChange('', 'language', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange("", "language", e.target.value)
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="pt-BR">Português (Brasil)</option>
@@ -290,7 +308,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.timezone}
-              onChange={(e) => handlePreferenceChange('', 'timezone', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange("", "timezone", e.target.value)
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="America/Sao_Paulo">São Paulo (GMT-3)</option>
@@ -303,12 +323,26 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Notifications */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Notificações por Email</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Notificações por Email
+        </h3>
         <div className="space-y-4">
           {[
-            { key: 'newMessages', label: 'Novas mensagens', description: 'Receber notificações de novas mensagens' },
-            { key: 'updates', label: 'Atualizações e anúncios', description: 'Novidades sobre o produto e funcionalidades' },
-            { key: 'marketing', label: 'Comunicações de marketing', description: 'Ofertas especiais e conteúdo promocional' }
+            {
+              key: "newMessages",
+              label: "Novas mensagens",
+              description: "Receber notificações de novas mensagens",
+            },
+            {
+              key: "updates",
+              label: "Atualizações e anúncios",
+              description: "Novidades sobre o produto e funcionalidades",
+            },
+            {
+              key: "marketing",
+              label: "Comunicações de marketing",
+              description: "Ofertas especiais e conteúdo promocional",
+            },
           ].map((item) => (
             <div key={item.key} className="flex items-center justify-between">
               <div>
@@ -318,8 +352,18 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={preferences.notifications[item.key as keyof typeof preferences.notifications]}
-                  onChange={(e) => handlePreferenceChange('notifications', item.key, e.target.checked)}
+                  checked={
+                    preferences.notifications[
+                      item.key as keyof typeof preferences.notifications
+                    ]
+                  }
+                  onChange={(e) =>
+                    handlePreferenceChange(
+                      "notifications",
+                      item.key,
+                      e.target.checked
+                    )
+                  }
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
@@ -331,7 +375,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Privacy Settings */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Configurações de Privacidade</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Configurações de Privacidade
+        </h3>
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -339,7 +385,13 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.privacy.profileVisibility}
-              onChange={(e) => handlePreferenceChange('privacy', 'profileVisibility', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange(
+                  "privacy",
+                  "profileVisibility",
+                  e.target.value
+                )
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="public">Público</option>
@@ -347,17 +399,27 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
               <option value="friends">Apenas Amigos</option>
             </select>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-white font-medium">Mostrar Status Online</div>
-              <div className="text-sm text-slate-400">Outros usuários podem ver quando você está online</div>
+              <div className="text-white font-medium">
+                Mostrar Status Online
+              </div>
+              <div className="text-sm text-slate-400">
+                Outros usuários podem ver quando você está online
+              </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={preferences.privacy.showOnlineStatus}
-                onChange={(e) => handlePreferenceChange('privacy', 'showOnlineStatus', e.target.checked)}
+                onChange={(e) =>
+                  handlePreferenceChange(
+                    "privacy",
+                    "showOnlineStatus",
+                    e.target.checked
+                  )
+                }
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
@@ -370,7 +432,13 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.privacy.whoCanContact}
-              onChange={(e) => handlePreferenceChange('privacy', 'whoCanContact', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange(
+                  "privacy",
+                  "whoCanContact",
+                  e.target.value
+                )
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="everyone">Todos</option>
@@ -383,7 +451,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Theme Preferences */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Preferências de Tema</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Preferências de Tema
+        </h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -391,7 +461,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.theme.mode}
-              onChange={(e) => handlePreferenceChange('theme', 'mode', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange("theme", "mode", e.target.value)
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="dark">Escuro</option>
@@ -405,7 +477,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.theme.colorScheme}
-              onChange={(e) => handlePreferenceChange('theme', 'colorScheme', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange("theme", "colorScheme", e.target.value)
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="blue">Azul</option>
@@ -419,7 +493,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Accessibility */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Acessibilidade</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Acessibilidade
+        </h3>
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -427,7 +503,13 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
             </label>
             <select
               value={preferences.accessibility.fontSize}
-              onChange={(e) => handlePreferenceChange('accessibility', 'fontSize', e.target.value)}
+              onChange={(e) =>
+                handlePreferenceChange(
+                  "accessibility",
+                  "fontSize",
+                  e.target.value
+                )
+              }
               className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="small">Pequena</option>
@@ -436,17 +518,25 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
               <option value="extra-large">Extra Grande</option>
             </select>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <div className="text-white font-medium">Alto Contraste</div>
-              <div className="text-sm text-slate-400">Aumenta o contraste para melhor legibilidade</div>
+              <div className="text-sm text-slate-400">
+                Aumenta o contraste para melhor legibilidade
+              </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={preferences.accessibility.highContrast}
-                onChange={(e) => handlePreferenceChange('accessibility', 'highContrast', e.target.checked)}
+                onChange={(e) =>
+                  handlePreferenceChange(
+                    "accessibility",
+                    "highContrast",
+                    e.target.checked
+                  )
+                }
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
@@ -455,14 +545,24 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-white font-medium">Compatibilidade com Leitor de Tela</div>
-              <div className="text-sm text-slate-400">Otimiza a interface para leitores de tela</div>
+              <div className="text-white font-medium">
+                Compatibilidade com Leitor de Tela
+              </div>
+              <div className="text-sm text-slate-400">
+                Otimiza a interface para leitores de tela
+              </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={preferences.accessibility.screenReader}
-                onChange={(e) => handlePreferenceChange('accessibility', 'screenReader', e.target.checked)}
+                onChange={(e) =>
+                  handlePreferenceChange(
+                    "accessibility",
+                    "screenReader",
+                    e.target.checked
+                  )
+                }
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
@@ -477,30 +577,45 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
     <div className="space-y-8">
       {/* Two-Factor Authentication */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Autenticação de Dois Fatores</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Autenticação de Dois Fatores
+        </h3>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-white font-medium">2FA {securitySettings.twoFactorEnabled ? 'Ativado' : 'Desativado'}</div>
+            <div className="text-white font-medium">
+              2FA {securitySettings.twoFactorEnabled ? "Ativado" : "Desativado"}
+            </div>
             <div className="text-sm text-slate-400">
               Adiciona uma camada extra de segurança à sua conta
             </div>
           </div>
           <button
-            onClick={() => setSecuritySettings(prev => ({ ...prev, twoFactorEnabled: !prev.twoFactorEnabled }))}
+            onClick={() =>
+              setSecuritySettings((prev) => ({
+                ...prev,
+                twoFactorEnabled: !prev.twoFactorEnabled,
+              }))
+            }
             className={`px-4 py-2 rounded-lg transition-colors ${
               securitySettings.twoFactorEnabled
-                ? 'bg-red-500 hover:bg-red-600 text-white'
-                : 'bg-green-500 hover:bg-green-600 text-white'
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-green-500 hover:bg-green-600 text-white"
             }`}
           >
-            {securitySettings.twoFactorEnabled ? 'Desativar' : 'Ativar'}
+            {securitySettings.twoFactorEnabled ? "Desativar" : "Ativar"}
           </button>
         </div>
         {securitySettings.twoFactorEnabled && (
           <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
             <div className="flex items-center gap-2">
-              <IconComponent name="shield" size={16} className="text-green-400" />
-              <span className="text-green-400 text-sm font-medium">2FA está ativo</span>
+              <IconComponent
+                name="shield"
+                size={16}
+                className="text-green-400"
+              />
+              <span className="text-green-400 text-sm font-medium">
+                2FA está ativo
+              </span>
             </div>
           </div>
         )}
@@ -508,16 +623,40 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Login History */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Histórico de Login</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Histórico de Login
+        </h3>
         <div className="space-y-3">
           {[
-            { device: 'Chrome - Windows', location: 'São Paulo, Brasil', time: '2 horas atrás', current: true },
-            { device: 'Safari - iPhone', location: 'São Paulo, Brasil', time: '1 dia atrás', current: false },
-            { device: 'Firefox - Linux', location: 'Rio de Janeiro, Brasil', time: '3 dias atrás', current: false }
+            {
+              device: "Chrome - Windows",
+              location: "São Paulo, Brasil",
+              time: "2 horas atrás",
+              current: true,
+            },
+            {
+              device: "Safari - iPhone",
+              location: "São Paulo, Brasil",
+              time: "1 dia atrás",
+              current: false,
+            },
+            {
+              device: "Firefox - Linux",
+              location: "Rio de Janeiro, Brasil",
+              time: "3 dias atrás",
+              current: false,
+            },
           ].map((session, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-slate-700 rounded-lg"
+            >
               <div className="flex items-center gap-3">
-                <IconComponent name="monitor" size={20} className="text-slate-400" />
+                <IconComponent
+                  name="monitor"
+                  size={20}
+                  className="text-slate-400"
+                />
                 <div>
                   <div className="text-white font-medium flex items-center gap-2">
                     {session.device}
@@ -527,7 +666,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
                       </span>
                     )}
                   </div>
-                  <div className="text-sm text-slate-400">{session.location} • {session.time}</div>
+                  <div className="text-sm text-slate-400">
+                    {session.location} • {session.time}
+                  </div>
                 </div>
               </div>
               {!session.current && (
@@ -542,28 +683,54 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Connected Devices */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Dispositivos Conectados</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Dispositivos Conectados
+        </h3>
         <div className="space-y-3">
           {[
-            { name: 'Computador Principal', type: 'Desktop', lastActive: 'Agora', trusted: true },
-            { name: 'iPhone de João', type: 'Mobile', lastActive: '1 hora atrás', trusted: true },
-            { name: 'Notebook Trabalho', type: 'Laptop', lastActive: '2 dias atrás', trusted: false }
+            {
+              name: "Computador Principal",
+              type: "Desktop",
+              lastActive: "Agora",
+              trusted: true,
+            },
+            {
+              name: "iPhone de João",
+              type: "Mobile",
+              lastActive: "1 hora atrás",
+              trusted: true,
+            },
+            {
+              name: "Notebook Trabalho",
+              type: "Laptop",
+              lastActive: "2 dias atrás",
+              trusted: false,
+            },
           ].map((device, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-slate-700 rounded-lg"
+            >
               <div className="flex items-center gap-3">
-                <IconComponent 
-                  name={device.type === 'Mobile' ? 'smartphone' : 'monitor'} 
-                  size={20} 
-                  className="text-slate-400" 
+                <IconComponent
+                  name={device.type === "Mobile" ? "smartphone" : "monitor"}
+                  size={20}
+                  className="text-slate-400"
                 />
                 <div>
                   <div className="text-white font-medium flex items-center gap-2">
                     {device.name}
                     {device.trusted && (
-                      <IconComponent name="shield" size={14} className="text-green-400" />
+                      <IconComponent
+                        name="shield"
+                        size={14}
+                        className="text-green-400"
+                      />
                     )}
                   </div>
-                  <div className="text-sm text-slate-400">Último acesso: {device.lastActive}</div>
+                  <div className="text-sm text-slate-400">
+                    Último acesso: {device.lastActive}
+                  </div>
                 </div>
               </div>
               <button className="text-red-400 hover:text-red-300 transition-colors">
@@ -576,10 +743,14 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Password Requirements */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Requisitos de Senha</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Requisitos de Senha
+        </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-slate-300">Comprimento mínimo: 8 caracteres</span>
+            <span className="text-slate-300">
+              Comprimento mínimo: 8 caracteres
+            </span>
             <IconComponent name="check" size={16} className="text-green-400" />
           </div>
           <div className="flex items-center justify-between">
@@ -595,12 +766,16 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Recovery Options */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Opções de Recuperação</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Opções de Recuperação
+        </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-white font-medium">Email de Recuperação</div>
-              <div className="text-sm text-slate-400">joao.silva@exemplo.com</div>
+              <div className="text-sm text-slate-400">
+                joao.silva@buildsynt.dev
+              </div>
             </div>
             <button className="text-blue-400 hover:text-blue-300 transition-colors">
               Alterar
@@ -609,7 +784,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-white font-medium">Códigos de Backup</div>
-              <div className="text-sm text-slate-400">10 códigos disponíveis</div>
+              <div className="text-sm text-slate-400">
+                10 códigos disponíveis
+              </div>
             </div>
             <button className="text-blue-400 hover:text-blue-300 transition-colors">
               Ver Códigos
@@ -624,7 +801,9 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
     <div className="space-y-8">
       {/* Data Export */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Exportar Meus Dados</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Exportar Meus Dados
+        </h3>
         <p className="text-slate-400 mb-4">
           Baixe uma cópia de todos os seus dados em formato JSON
         </p>
@@ -635,12 +814,26 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Data Sharing */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Preferências de Compartilhamento</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Preferências de Compartilhamento
+        </h3>
         <div className="space-y-4">
           {[
-            { key: 'analytics', label: 'Dados de Uso Anônimos', description: 'Ajuda a melhorar o produto' },
-            { key: 'marketing', label: 'Dados para Marketing', description: 'Personalização de conteúdo' },
-            { key: 'partners', label: 'Compartilhar com Parceiros', description: 'Serviços integrados' }
+            {
+              key: "analytics",
+              label: "Dados de Uso Anônimos",
+              description: "Ajuda a melhorar o produto",
+            },
+            {
+              key: "marketing",
+              label: "Dados para Marketing",
+              description: "Personalização de conteúdo",
+            },
+            {
+              key: "partners",
+              label: "Compartilhar com Parceiros",
+              description: "Serviços integrados",
+            },
           ].map((item) => (
             <div key={item.key} className="flex items-center justify-between">
               <div>
@@ -650,7 +843,7 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  defaultChecked={item.key === 'analytics'}
+                  defaultChecked={item.key === "analytics"}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
@@ -662,9 +855,12 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Account Deletion */}
       <div className="bg-slate-800 rounded-xl p-6 border border-red-500/20">
-        <h3 className="text-lg font-semibold text-red-400 mb-4">Excluir Conta</h3>
+        <h3 className="text-lg font-semibold text-red-400 mb-4">
+          Excluir Conta
+        </h3>
         <p className="text-slate-400 mb-4">
-          Esta ação é irreversível. Todos os seus dados serão permanentemente removidos.
+          Esta ação é irreversível. Todos os seus dados serão permanentemente
+          removidos.
         </p>
         <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
           Excluir Minha Conta
@@ -673,17 +869,28 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
 
       {/* Legal Links */}
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-4">Documentos Legais</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">
+          Documentos Legais
+        </h3>
         <div className="space-y-3">
-          <a href="#" className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors">
+          <a
+            href="#"
+            className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors"
+          >
             <span>Política de Privacidade</span>
             <IconComponent name="external-link" size={16} />
           </a>
-          <a href="#" className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors">
+          <a
+            href="#"
+            className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors"
+          >
             <span>Termos de Serviço</span>
             <IconComponent name="external-link" size={16} />
           </a>
-          <a href="#" className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors">
+          <a
+            href="#"
+            className="flex items-center justify-between text-blue-400 hover:text-blue-300 transition-colors"
+          >
             <span>Política de Cookies</span>
             <IconComponent name="external-link" size={16} />
           </a>
@@ -698,8 +905,12 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Configurações</h1>
-            <p className="text-slate-400">Gerencie suas preferências e configurações de conta</p>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Configurações
+            </h1>
+            <p className="text-slate-400">
+              Gerencie suas preferências e configurações de conta
+            </p>
           </div>
           {onClose && (
             <button
@@ -721,8 +932,8 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-blue-500 text-white'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                      ? "bg-blue-500 text-white"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800"
                   }`}
                 >
                   <IconComponent name={tab.icon} size={20} />
@@ -740,10 +951,10 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {activeTab === 'profile' && renderProfileSettings()}
-              {activeTab === 'preferences' && renderPreferences()}
-              {activeTab === 'security' && renderSecurity()}
-              {activeTab === 'privacy' && renderPrivacy()}
+              {activeTab === "profile" && renderProfileSettings()}
+              {activeTab === "preferences" && renderPreferences()}
+              {activeTab === "security" && renderSecurity()}
+              {activeTab === "privacy" && renderPrivacy()}
             </motion.div>
 
             {/* Save/Cancel Buttons */}
@@ -771,7 +982,7 @@ const UserSettings: React.FC<UserSettingsProps> = ({ onClose }) => {
                         Salvando...
                       </>
                     ) : (
-                      'Salvar Alterações'
+                      "Salvar Alterações"
                     )}
                   </button>
                 </div>

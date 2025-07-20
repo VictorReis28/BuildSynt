@@ -73,7 +73,7 @@ export const contacts: Contact[] = [
   },
   {
     name: "Email",
-    url: "mailto:seu.email@exemplo.com",
+    url: "mailto:contato@buildsynt.dev",
     icon: "mail",
   },
 ];

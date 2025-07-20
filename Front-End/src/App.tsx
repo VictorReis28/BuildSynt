@@ -83,13 +83,13 @@ function App() {
           <Suspense
             fallback={<div className="h-64 bg-slate-900 animate-pulse" />}
           >
-            <AboutSection />
+            <RepositoryAnalyzer />
           </Suspense>
 
           <Suspense
             fallback={<div className="h-64 bg-slate-900 animate-pulse" />}
           >
-            <RepositoryAnalyzer />
+            <AboutSection />
           </Suspense>
 
           <Suspense
