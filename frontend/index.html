@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -28,16 +28,9 @@
       as="script"
     />
 
-    <!-- DNS prefetch for external resources -->
-    <link rel="dns-prefetch" href="//api.github.com" />
-
     <title>BuildSynt - Sistema de Análise de Código</title>
 
     <style>
-      html {
-        scroll-behavior: smooth;
-      }
-
       /* Loading screen */
       #loading-screen {
         position: fixed;
@@ -89,8 +82,8 @@
 
     <!-- Remove loading screen when app loads -->
     <script>
-      window.addEventListener("load", () => {
-        document.body.classList.add("app-loaded");
+      window.addEventListener('load', () => {
+        document.body.classList.add('app-loaded');
       });
     </script>
   </body>

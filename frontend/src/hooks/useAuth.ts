@@ -16,7 +16,6 @@ export const useAuth = () => {
         id: Date.now().toString(),
         name: 'Usuário',
         email,
-        isAuthenticated: true,
       },
       isAuthenticated: true,
     });
@@ -36,7 +35,6 @@ export const useAuth = () => {
         id: Date.now().toString(),
         name,
         email,
-        isAuthenticated: true,
       },
       isAuthenticated: true,
     });

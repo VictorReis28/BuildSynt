@@ -1,9 +1,3 @@
-export interface Repository {
-  url: string;
-  name: string;
-  owner: string;
-}
-
 export interface Technology {
   name: string;
   icon: string;
@@ -27,7 +21,6 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  isAuthenticated: boolean;
 }
 
 export interface AuthState {

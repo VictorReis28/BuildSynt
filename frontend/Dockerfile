@@ -1,4 +1,4 @@
-# Dockerfile Simplificado mas Seguro
+# Build stage
 FROM node:18-alpine AS builder
 
 WORKDIR /app
@@ -8,16 +8,12 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
 
-# Produção
+# Production
 FROM nginx:alpine
 
-# Copiar configuração nginx
 COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copiar build
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Criar usuário não-root
 RUN addgroup -g 1001 buildsynt && \
     adduser -S buildsynt -u 1001 -G buildsynt && \
     chown -R buildsynt:buildsynt /usr/share/nginx/html /var/cache/nginx /var/log/nginx /var/run

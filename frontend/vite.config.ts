@@ -1,11 +1,10 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react()],
 
   build: {
-    // Otimizações básicas
     rollupOptions: {
       output: {
         manualChunks: {
@@ -15,7 +14,7 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: false, // Desabilitado em produção
+    sourcemap: false,
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -27,7 +26,6 @@ export default defineConfig({
 
   server: {
     port: 3000,
-    // Headers de segurança básicos para dev
     headers: {
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
