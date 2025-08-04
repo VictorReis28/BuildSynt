@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
 import { useAuth } from '../hooks/useAuth';
@@ -75,6 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <button
                   onClick={onClose}
                   className='rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white'
+                  aria-label='Fechar menu'
                 >
                   <IconComponent name='x' size={20} />
                 </button>
