@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 interface PerformanceMetrics {
   fcp?: number; // First Contentful Paint
@@ -11,13 +11,14 @@ interface PerformanceMetrics {
 export const usePerformanceMonitor = () => {
   useEffect(() => {
     // Simple check for development
-    const isDev = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    const isDev =
+      location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
     if (!isDev) return;
 
     const logMetrics = (metrics: PerformanceMetrics) => {
       // eslint-disable-next-line no-console
-      console.group("🚀 Performance Metrics");
+      console.group('🚀 Performance Metrics');
       if (metrics.fcp)
         // eslint-disable-next-line no-console
         console.log(`⚡ First Contentful Paint: ${metrics.fcp.toFixed(2)}ms`);
@@ -38,23 +39,23 @@ export const usePerformanceMonitor = () => {
     };
 
     // Observe Performance API
-    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
-      const perfObserver = new PerformanceObserver((list) => {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+      const perfObserver = new PerformanceObserver(list => {
         const metrics: PerformanceMetrics = {};
 
         for (const entry of list.getEntries()) {
           switch (entry.entryType) {
-            case "paint": {
-              if (entry.name === "first-contentful-paint") {
+            case 'paint': {
+              if (entry.name === 'first-contentful-paint') {
                 metrics.fcp = entry.startTime;
               }
               break;
             }
-            case "largest-contentful-paint": {
+            case 'largest-contentful-paint': {
               metrics.lcp = entry.startTime;
               break;
             }
-            case "first-input": {
+            case 'first-input': {
               const fidEntry = entry as PerformanceEventTiming & {
                 processingStart: number;
               };
@@ -62,7 +63,7 @@ export const usePerformanceMonitor = () => {
               metrics.fid = fidEntry.processingStart - fidEntry.startTime;
               break;
             }
-            case "layout-shift": {
+            case 'layout-shift': {
               const layoutEntry = entry as PerformanceEntry & {
                 hadRecentInput: boolean;
                 value: number;
@@ -72,7 +73,7 @@ export const usePerformanceMonitor = () => {
               }
               break;
             }
-            case "navigation": {
+            case 'navigation': {
               const navEntry = entry as PerformanceNavigationTiming;
 
               metrics.ttfb = navEntry.responseStart - navEntry.requestStart;
@@ -89,16 +90,16 @@ export const usePerformanceMonitor = () => {
       try {
         perfObserver.observe({
           entryTypes: [
-            "paint",
-            "largest-contentful-paint",
-            "first-input",
-            "layout-shift",
-            "navigation",
+            'paint',
+            'largest-contentful-paint',
+            'first-input',
+            'layout-shift',
+            'navigation',
           ],
         });
       } catch {
         // Fallback for browsers that don't support all entry types
-        perfObserver.observe({ entryTypes: ["paint", "navigation"] });
+        perfObserver.observe({ entryTypes: ['paint', 'navigation'] });
       }
 
       return () => {

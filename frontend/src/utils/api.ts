@@ -6,7 +6,7 @@
 // API Configuration for frontend services
 const API_CONFIG = {
   github: {
-    baseUrl: "https://api.github.com",
+    baseUrl: 'https://api.github.com',
     timeout: 10000,
   },
 };
@@ -16,26 +16,26 @@ export class APIError extends Error {
   constructor(
     message: string,
     public status: number,
-    public code?: string,
+    public code?: string
   ) {
     super(message);
-    this.name = "APIError";
+    this.name = 'APIError';
   }
 }
 
 // Simple headers for public APIs
 const createHeaders = (): HeadersInit => {
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
   // Add GitHub token if available (for higher rate limits)
-  const githubToken = (import.meta as { env?: { VITE_GITHUB_TOKEN?: string } }).env
-    ?.VITE_GITHUB_TOKEN;
+  const githubToken = (import.meta as { env?: { VITE_GITHUB_TOKEN?: string } })
+    .env?.VITE_GITHUB_TOKEN;
 
   if (githubToken) {
-    headers["Authorization"] = `token ${githubToken}`;
+    headers['Authorization'] = `token ${githubToken}`;
   }
 
   return headers;
@@ -45,7 +45,7 @@ const createHeaders = (): HeadersInit => {
 const fetchWithTimeout = async (
   url: string,
   options: RequestInit = {},
-  timeout = API_CONFIG.github.timeout,
+  timeout = API_CONFIG.github.timeout
 ): Promise<Response> => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -63,7 +63,10 @@ const fetchWithTimeout = async (
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new APIError(`HTTP ${response.status}: ${response.statusText}`, response.status);
+      throw new APIError(
+        `HTTP ${response.status}: ${response.statusText}`,
+        response.status
+      );
     }
 
     return response;
@@ -74,11 +77,11 @@ const fetchWithTimeout = async (
       throw error;
     }
 
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new APIError("Request timeout", 408, "TIMEOUT");
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new APIError('Request timeout', 408, 'TIMEOUT');
     }
 
-    throw new APIError("Network error", 0, "NETWORK_ERROR");
+    throw new APIError('Network error', 0, 'NETWORK_ERROR');
   }
 };
 
@@ -93,13 +96,13 @@ export const githubAPI = {
       return await response.json();
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error("Error fetching repository:", error);
+      console.error('Error fetching repository:', error);
       throw error;
     }
   },
 
   // Get repository files for analysis
-  async getRepositoryContents(owner: string, repo: string, path = "") {
+  async getRepositoryContents(owner: string, repo: string, path = '') {
     try {
       const url = `${API_CONFIG.github.baseUrl}/repos/${owner}/${repo}/contents/${path}`;
       const response = await fetchWithTimeout(url);
@@ -107,7 +110,7 @@ export const githubAPI = {
       return await response.json();
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error("Error fetching repository contents:", error);
+      console.error('Error fetching repository contents:', error);
       throw error;
     }
   },
@@ -117,7 +120,7 @@ export const githubAPI = {
 export const mockAnalysis = {
   async analyzeRepository(githubUrl: string) {
     // Simulate analysis processing time
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Return analysis results
     return {
@@ -126,24 +129,24 @@ export const mockAnalysis = {
       analysisDate: new Date().toISOString(),
       errors: [
         {
-          type: "TypeScript Error",
-          file: "src/components/Example.tsx",
+          type: 'TypeScript Error',
+          file: 'src/components/Example.tsx',
           line: 42,
-          message: "Property does not exist on type",
-          severity: "error",
+          message: 'Property does not exist on type',
+          severity: 'error',
         },
         {
-          type: "React Warning",
-          file: "src/App.tsx",
+          type: 'React Warning',
+          file: 'src/App.tsx',
           line: 15,
-          message: "Missing key prop in list item",
-          severity: "warning",
+          message: 'Missing key prop in list item',
+          severity: 'warning',
         },
       ],
       suggestions: [
-        "Add proper TypeScript types for component props",
-        "Implement proper key props for list rendering",
-        "Consider using React.memo for performance optimization",
+        'Add proper TypeScript types for component props',
+        'Implement proper key props for list rendering',
+        'Consider using React.memo for performance optimization',
       ],
       metrics: {
         totalFiles: 45,

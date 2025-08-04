@@ -8,8 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "type-check": "tsc --noEmit",
+    "check-all": "yarn type-check && yarn lint:check && yarn format:check",
     "docker:build": "docker build -t buildsynt-frontend .",
     "docker:run": "docker run -p 3000:3000 buildsynt-frontend"
   },

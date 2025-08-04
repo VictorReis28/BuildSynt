@@ -8,10 +8,10 @@ export const focusManagement = {
    * @param message - Mensagem a ser anunciada
    */
   announceToScreenReader(message: string): void {
-    const announcement = document.createElement("div");
-    announcement.setAttribute("aria-live", "polite");
-    announcement.setAttribute("aria-atomic", "true");
-    announcement.setAttribute("class", "sr-only");
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.setAttribute('class', 'sr-only');
     announcement.textContent = message;
 
     document.body.appendChild(announcement);
@@ -39,7 +39,7 @@ export const focusManagement = {
    */
   focusFirstFocusableElement(container: HTMLElement): void {
     const focusableElements = container.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
 
     const firstElement = focusableElements[0] as HTMLElement;
