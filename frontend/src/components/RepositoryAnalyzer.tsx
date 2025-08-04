@@ -1,89 +1,29 @@
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 
-import { focusManagement } from '../utils/accessibility';
-import { api } from '../utils/api';
-import { errorHandler, ErrorType } from '../utils/errorHandling';
-import { sanitizeInput, rateLimiter } from '../utils/security';
 import { validateGitHubUrl } from '../utils/validation';
 
 import IconComponent from './IconComponent';
-import LoadingSpinner from './LoadingSpinner';
 
 const RepositoryAnalyzer: React.FC = () => {
   const [url, setUrl] = useState('');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [analysisResult, setAnalysisResult] = useState<{
-    repositoryInfo?: {
-      name: string;
-      description: string;
-      language: string;
-      stars: number;
-      forks: number;
-    };
-    issues?: Array<{
-      type: string;
-      severity: string;
-      message: string;
-      file: string;
-      line: number;
-    }>;
-    suggestions?: string[];
-    errorCount?: number;
-    suggestionCount?: number;
-  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors([]);
-    setAnalysisResult(null);
 
-    if (!rateLimiter.isAllowed('repository-analysis', 3, 300000)) {
-      const error = errorHandler.createError(
-        ErrorType.VALIDATION,
-        'Muitas tentativas de análise. Aguarde alguns minutos.',
-        'RATE_LIMITED'
-      );
-
-      errorHandler.logError(error);
-      setErrors([error.message]);
-
-      return;
-    }
-
-    const sanitizedUrl = sanitizeInput.url(url.trim());
-    const validation = validateGitHubUrl(sanitizedUrl);
+    const validation = validateGitHubUrl(url.trim());
 
     if (!validation.isValid) {
       setErrors(validation.errors);
-      focusManagement.announceToScreenReader(
-        'URL inválida. Verifique o formato.'
-      );
-
       return;
     }
 
-    setIsAnalyzing(true);
-
-    try {
-      const result = await api.analysis.analyzeRepository(sanitizedUrl);
-
-      setAnalysisResult(result);
-
-      focusManagement.announceToScreenReader('Análise concluída com sucesso');
-    } catch (error: unknown) {
-      const appError = errorHandler.handleApiError(error);
-
-      errorHandler.logError(appError);
-      setErrors([appError.message]);
-
-      focusManagement.announceToScreenReader(
-        `Erro na análise: ${appError.message}`
-      );
-    } finally {
-      setIsAnalyzing(false);
-    }
+    // Placeholder for future redirection
+    alert(
+      'Em breve você será redirecionado para a página de análise detalhada do repositório!'
+    );
   };
 
   const handleInputChange = (value: string) => {
@@ -152,8 +92,7 @@ const RepositoryAnalyzer: React.FC = () => {
                       ? 'border-red-500 focus:ring-red-500'
                       : 'border-slate-600 focus:ring-blue-500'
                   }`}
-                  disabled={isAnalyzing}
-                  aria-invalid={errors.length > 0}
+                  {...(errors.length > 0 && { 'aria-invalid': 'true' })}
                   aria-describedby={
                     errors.length > 0 ? 'url-error' : 'url-help'
                   }
@@ -181,71 +120,20 @@ const RepositoryAnalyzer: React.FC = () => {
 
             <motion.button
               type='submit'
-              disabled={isAnalyzing || errors.length > 0}
-              whileHover={{ scale: isAnalyzing ? 1 : 1.02 }}
-              whileTap={{ scale: isAnalyzing ? 1 : 0.98 }}
+              disabled={errors.length > 0}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className='flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 font-medium text-white transition-all duration-300 hover:from-blue-600 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50'
               aria-describedby='analyze-button-help'
             >
-              {isAnalyzing ? (
-                <>
-                  <LoadingSpinner size='sm' />
-                  Analisando...
-                </>
-              ) : (
-                <>
-                  <IconComponent name='search' size={20} />
-                  Analisar Repositório
-                </>
-              )}
+              <IconComponent name='search' size={20} />
+              Analisar Repositório
             </motion.button>
 
             <div id='analyze-button-help' className='sr-only'>
-              {isAnalyzing
-                ? 'Análise em andamento'
-                : 'Clique para iniciar a análise do repositório'}
+              Clique para iniciar a análise do repositório
             </div>
           </form>
-
-          {analysisResult && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className='mt-8 rounded-lg border border-slate-600 bg-slate-700 p-6'
-              role='region'
-              aria-label='Resultado da análise'
-            >
-              <div className='mb-4 flex items-center gap-3'>
-                <IconComponent
-                  name='bar-chart'
-                  size={24}
-                  className='text-green-400'
-                />
-                <h3 className='text-xl font-bold text-white'>
-                  Análise Concluída
-                </h3>
-              </div>
-
-              <div className='grid gap-4 md:grid-cols-2'>
-                <div className='rounded-lg bg-slate-800 p-4'>
-                  <h4 className='mb-2 font-medium text-white'>
-                    Erros Encontrados
-                  </h4>
-                  <p className='text-2xl font-bold text-red-400'>
-                    {analysisResult.errorCount || 0}
-                  </p>
-                </div>
-
-                <div className='rounded-lg bg-slate-800 p-4'>
-                  <h4 className='mb-2 font-medium text-white'>Sugestões</h4>
-                  <p className='text-2xl font-bold text-blue-400'>
-                    {analysisResult.suggestionCount || 0}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           <div className='mt-6 rounded-lg bg-slate-700 p-4'>
             <div className='flex items-start gap-3'>

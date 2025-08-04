@@ -1,34 +1,23 @@
 import { useState } from 'react';
 
-import type { User, AuthState } from '../types';
+import type { AuthState } from '../types';
 
 export const useAuth = () => {
-  // Mock authenticated user for testing
+  // Start with unauthenticated state
   const [authState, setAuthState] = useState<AuthState>({
-    user: {
-      id: '1',
-      name: 'João Silva',
-      email: 'joao.silva@buildsynt.dev',
-      avatar:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-      isAuthenticated: true,
-    },
-    isAuthenticated: true,
+    user: null,
+    isAuthenticated: false,
   });
 
   const login = (email: string, _password: string) => {
-    // Mock login logic
-    const mockUser: User = {
-      id: '1',
-      name: 'João Silva',
-      email,
-      avatar:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-      isAuthenticated: true,
-    };
-
+    // Simplified login - sets authenticated state without mock user data
     setAuthState({
-      user: mockUser,
+      user: {
+        id: Date.now().toString(),
+        name: 'Usuário',
+        email,
+        isAuthenticated: true,
+      },
       isAuthenticated: true,
     });
   };
@@ -41,18 +30,14 @@ export const useAuth = () => {
   };
 
   const register = (name: string, email: string, _password: string) => {
-    // Mock register logic
-    const mockUser: User = {
-      id: '2',
-      name,
-      email,
-      avatar:
-        'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-      isAuthenticated: true,
-    };
-
+    // Simplified register - sets authenticated state without mock user data
     setAuthState({
-      user: mockUser,
+      user: {
+        id: Date.now().toString(),
+        name,
+        email,
+        isAuthenticated: true,
+      },
       isAuthenticated: true,
     });
   };
