@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Comprehensive error handling utilities
  */
 
 export enum ErrorType {
-  VALIDATION = 'VALIDATION',
-  NETWORK = 'NETWORK',
-  AUTHENTICATION = 'AUTHENTICATION',
-  AUTHORIZATION = 'AUTHORIZATION',
-  SERVER = 'SERVER',
-  UNKNOWN = 'UNKNOWN',
+  VALIDATION = "VALIDATION",
+  NETWORK = "NETWORK",
+  AUTHENTICATION = "AUTHENTICATION",
+  AUTHORIZATION = "AUTHORIZATION",
+  SERVER = "SERVER",
+  UNKNOWN = "UNKNOWN",
 }
 
 export interface AppError {
   type: ErrorType;
   message: string;
   code?: string;
-  details?: any;
+  details?: Record<string, unknown>;
   timestamp: number;
 }
 
@@ -37,7 +37,8 @@ export class ErrorHandler {
     this.errorLog.push(error);
 
     // TODO: Backend Integration - Send error to logging service
-    console.error('Application Error:', error);
+    // eslint-disable-next-line no-console
+    console.error("Application Error:", error);
 
     // Keep only last 100 errors in memory
     if (this.errorLog.length > 100) {
@@ -49,7 +50,7 @@ export class ErrorHandler {
     type: ErrorType,
     message: string,
     code?: string,
-    details?: any
+    details?: Record<string, unknown>,
   ): AppError {
     return {
       type,
@@ -60,52 +61,49 @@ export class ErrorHandler {
     };
   }
 
-  handleApiError(error: any): AppError {
-    if (error.status) {
-      switch (error.status) {
+  handleApiError(error: unknown): AppError {
+    if (error && typeof error === "object" && "status" in error) {
+      const apiError = error as { status: number; message?: string };
+      switch (apiError.status) {
         case 401:
           return this.createError(
             ErrorType.AUTHENTICATION,
-            'Sessão expirada. Faça login novamente.',
-            'UNAUTHORIZED'
+            "Sessão expirada. Faça login novamente.",
+            "UNAUTHORIZED",
           );
         case 403:
           return this.createError(
             ErrorType.AUTHORIZATION,
-            'Você não tem permissão para esta ação.',
-            'FORBIDDEN'
+            "Você não tem permissão para esta ação.",
+            "FORBIDDEN",
           );
         case 404:
-          return this.createError(
-            ErrorType.SERVER,
-            'Recurso não encontrado.',
-            'NOT_FOUND'
-          );
+          return this.createError(ErrorType.SERVER, "Recurso não encontrado.", "NOT_FOUND");
         case 429:
           return this.createError(
             ErrorType.NETWORK,
-            'Muitas tentativas. Tente novamente em alguns minutos.',
-            'RATE_LIMITED'
+            "Muitas tentativas. Tente novamente em alguns minutos.",
+            "RATE_LIMITED",
           );
         case 500:
           return this.createError(
             ErrorType.SERVER,
-            'Erro interno do servidor. Tente novamente mais tarde.',
-            'INTERNAL_ERROR'
+            "Erro interno do servidor. Tente novamente mais tarde.",
+            "INTERNAL_ERROR",
           );
         default:
           return this.createError(
             ErrorType.SERVER,
-            'Erro no servidor. Tente novamente.',
-            'SERVER_ERROR'
+            "Erro no servidor. Tente novamente.",
+            "SERVER_ERROR",
           );
       }
     }
 
     return this.createError(
       ErrorType.NETWORK,
-      'Erro de conexão. Verifique sua internet.',
-      'NETWORK_ERROR'
+      "Erro de conexão. Verifique sua internet.",
+      "NETWORK_ERROR",
     );
   }
 
@@ -121,9 +119,7 @@ export class ErrorHandler {
 export const errorHandler = ErrorHandler.getInstance();
 
 // React error boundary helper
-export const createErrorBoundary = (
-  fallbackComponent: React.ComponentType<any>
-) => {
+export const createErrorBoundary = (fallbackComponent: React.ComponentType<{ error?: Error }>) => {
   return class ErrorBoundary extends React.Component<
     { children: React.ReactNode },
     { hasError: boolean; error?: Error }
@@ -139,12 +135,10 @@ export const createErrorBoundary = (
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
       errorHandler.logError(
-        errorHandler.createError(
-          ErrorType.UNKNOWN,
-          error.message,
-          'REACT_ERROR',
-          { error, errorInfo }
-        )
+        errorHandler.createError(ErrorType.UNKNOWN, error.message, "REACT_ERROR", {
+          error,
+          errorInfo,
+        }),
       );
     }
 

@@ -1,29 +1,29 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import type { User, AuthState } from '../types';
+import type { User, AuthState } from "../types";
 
 export const useAuth = () => {
   // Mock authenticated user for testing
   const [authState, setAuthState] = useState<AuthState>({
     user: {
-      id: '1',
-      name: 'João Silva',
-      email: 'joao.silva@buildsynt.dev',
+      id: "1",
+      name: "João Silva",
+      email: "joao.silva@buildsynt.dev",
       avatar:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2",
       isAuthenticated: true,
     },
     isAuthenticated: true,
   });
 
-  const login = (email: string, password: string) => {
+  const login = (email: string, _password: string) => {
     // Mock login logic
     const mockUser: User = {
-      id: '1',
-      name: 'João Silva',
+      id: "1",
+      name: "João Silva",
       email,
       avatar:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2",
       isAuthenticated: true,
     };
 
@@ -40,14 +40,14 @@ export const useAuth = () => {
     });
   };
 
-  const register = (name: string, email: string, password: string) => {
+  const register = (name: string, email: string, _password: string) => {
     // Mock register logic
     const mockUser: User = {
-      id: '2',
+      id: "2",
       name,
       email,
       avatar:
-        'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
+        "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2",
       isAuthenticated: true,
     };
 
