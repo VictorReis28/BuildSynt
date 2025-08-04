@@ -1,0 +1,65 @@
+{
+  "name": "buildsynt",
+  "version": "1.0.0",
+  "description": "Um sistema moderno de análise e construção sintética para desenvolvimento de software",
+  "private": true,
+  "homepage": "https://github.com/VictorReis28/BuildSynt",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VictorReis28/BuildSynt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VictorReis28/BuildSynt/issues"
+  },
+  "author": "VictorReis28",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "yarn": ">=1.22.0"
+  },
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "yarn workspace buildsynt-frontend dev",
+    "build": "yarn workspace buildsynt-frontend build",
+    "preview": "yarn workspace buildsynt-frontend preview",
+    "lint": "yarn workspace buildsynt-frontend lint",
+    "type-check": "yarn workspace buildsynt-frontend type-check",
+    "docker:dev": "docker-compose -f docker/docker-compose.dev.yml up -d",
+    "docker:prod": "docker-compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.yml down && docker-compose -f docker/docker-compose.dev.yml down",
+    "docker:build": "docker-compose -f docker/docker-compose.yml build",
+    "setup": "node -e \"require('child_process').execSync(process.platform === 'win32' ? '.\\\\scripts\\\\setup.ps1' : './scripts/setup.sh', {stdio: 'inherit'})\"",
+    "postinstall": "cd frontend && yarn install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.0",
+    "@commitlint/config-conventional": "^17.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "yarn workspace frontend lint --fix"
+    ],
+    "*.{md,json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "docker",
+    "frontend",
+    "build-tools",
+    "development"
+  ]
+}

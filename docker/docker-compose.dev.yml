@@ -1,0 +1,156 @@
+# Rede para ambiente de desenvolvimento
+networks:
+  buildsynt-dev-network:
+    name: buildsynt-dev-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
+
+# Volumes para desenvolvimento
+volumes:
+  frontend_node_modules:
+    name: buildsynt_frontend_node_modules_dev
+    driver: local
+  frontend_cache:
+    name: buildsynt_frontend_cache_dev
+    driver: local
+  # Volumes para futuros serviços (comentados por enquanto)
+  # backend_node_modules:
+  #   name: buildsynt_backend_node_modules_dev
+  #   driver: local
+  # postgres_dev_data:
+  #   name: buildsynt_postgres_data_dev
+  #   driver: local
+  # redis_dev_data:
+  #   name: buildsynt_redis_data_dev
+  #   driver: local
+
+services:
+  # Frontend Development - Hot reload ativo
+  frontend-dev:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    image: buildsynt/frontend:dev
+    container_name: buildsynt-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # Vite dev server
+      - "24678:24678" # Vite HMR port
+    networks:
+      buildsynt-dev-network:
+        ipv4_address: 172.21.0.10
+    volumes:
+      # Source code mounting para hot reload
+      - ../frontend:/app:rw
+      # Cache node_modules em volume separado
+      - frontend_node_modules:/app/node_modules:rw
+      # Cache do Vite
+      - frontend_cache:/app/.vite:rw
+      # Evitar conflitos com arquivos do host
+      - /app/dist
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=3000
+      - VITE_HMR_PORT=24678
+      - VITE_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: ["yarn", "dev", "--host", "0.0.0.0", "--port", "3000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.buildsynt.service=frontend-dev"
+      - "com.buildsynt.environment=development"
+      - "com.buildsynt.version=dev"
+    # Limites de recursos mais generosos para desenvolvimento
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  # Placeholder para backend de desenvolvimento (comentado)
+  # backend-dev:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.dev
+  #   image: buildsynt/backend:dev
+  #   container_name: buildsynt-backend-dev
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5000:5000"
+  #     - "9229:9229"  # Debug port
+  #   networks:
+  #     buildsynt-dev-network:
+  #       ipv4_address: 172.21.0.20
+  #   volumes:
+  #     - ./backend:/app:rw
+  #     - backend_node_modules:/app/node_modules:rw
+  #     - /app/dist
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=postgresql://buildsynt_dev:dev123@postgres-dev:5432/buildsynt_dev
+  #     - REDIS_URL=redis://redis-dev:6379
+  #     - CORS_ORIGIN=http://localhost:3000
+  #   command: ["npm", "run", "dev"]
+  #   depends_on:
+  #     - postgres-dev
+  #     - redis-dev
+
+  # Placeholder para PostgreSQL de desenvolvimento (comentado)
+  # postgres-dev:
+  #   image: postgres:15-alpine
+  #   container_name: buildsynt-postgres-dev
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5433:5432"
+  #   networks:
+  #     buildsynt-dev-network:
+  #       ipv4_address: 172.21.0.30
+  #   volumes:
+  #     - postgres_dev_data:/var/lib/postgresql/data:rw
+  #   environment:
+  #     - POSTGRES_DB=buildsynt_dev
+  #     - POSTGRES_USER=buildsynt_dev
+  #     - POSTGRES_PASSWORD=dev123
+
+  # Placeholder para Redis de desenvolvimento (comentado)
+  # redis-dev:
+  #   image: redis:7-alpine
+  #   container_name: buildsynt-redis-dev
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6380:6379"
+  #   networks:
+  #     buildsynt-dev-network:
+  #       ipv4_address: 172.21.0.40
+  #   volumes:
+  #     - redis_dev_data:/data:rw
+
+  # Placeholder para Adminer de desenvolvimento (comentado)
+  # adminer-dev:
+  #   image: adminer:latest
+  #   container_name: buildsynt-adminer-dev
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8082:8080"
+  #   networks:
+  #     buildsynt-dev-network:
+  #       ipv4_address: 172.21.0.50
+  #   environment:
+  #     - ADMINER_DEFAULT_SERVER=postgres-dev
+  #   depends_on:
+  #     - postgres-dev

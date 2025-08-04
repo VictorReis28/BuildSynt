@@ -1,0 +1,22 @@
+# Docker Compose Override
+# Este arquivo permite customizações locais sem modificar os arquivos principais
+# Copie para docker-compose.override.yml e ajuste conforme necessário
+
+version: "3.8"
+# Exemplo de override para desenvolvimento
+# Descomente e ajuste conforme necessário
+
+# services:
+#   frontend:
+#     environment:
+#       - DEBUG=true
+#       - CUSTOM_VAR=value
+#     ports:
+#       - "3001:3000"  # Porta alternativa
+#     volumes:
+#       - ./custom-nginx.conf:/etc/nginx/nginx.conf:ro
+
+# Para usar este arquivo:
+# 1. Copie para docker/docker-compose.override.yml
+# 2. Descomente e ajuste as configurações desejadas
+# 3. Execute: docker-compose -f docker/docker-compose.yml up -d

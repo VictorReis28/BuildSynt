@@ -1,0 +1,134 @@
+# Rede para isolamento dos serviços
+networks:
+  buildsynt-network:
+    name: buildsynt-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+# Volumes para persistência de dados
+volumes:
+  nginx_logs:
+    name: buildsynt_nginx_logs
+    driver: local
+  app_cache:
+    name: buildsynt_app_cache
+    driver: local
+  # Volumes para futuros serviços (comentados por enquanto)
+  # postgres_data:
+  #   name: buildsynt_postgres_data
+  #   driver: local
+  # redis_data:
+  #   name: buildsynt_redis_data
+  #   driver: local
+  # app_uploads:
+  #   name: buildsynt_app_uploads
+  #   driver: local
+
+services:
+  # Frontend service - Aplicação React
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      target: production
+    image: buildsynt/frontend:latest
+    container_name: buildsynt-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      buildsynt-network:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - nginx_logs:/var/log/nginx:rw
+      - app_cache:/var/cache/nginx:rw
+    environment:
+      - NODE_ENV=production
+      - NGINX_WORKER_PROCESSES=auto
+      - NGINX_WORKER_CONNECTIONS=1024
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.buildsynt.service=frontend"
+      - "com.buildsynt.version=1.0.0"
+      - "com.buildsynt.description=BuildSynt Frontend Application"
+    # Limites de recursos para segurança
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: stop-first
+      restart_policy:
+        condition: unless-stopped
+        delay: 5s
+        max_attempts: 3
+
+  # Placeholder para backend (comentado)
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   image: buildsynt/backend:latest
+  #   container_name: buildsynt-backend
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5000:5000"
+  #   networks:
+  #     buildsynt-network:
+  #       ipv4_address: 172.20.0.20
+  #   volumes:
+  #     - app_uploads:/app/uploads:rw
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=postgresql://user:password@postgres:5432/buildsynt
+  #     - REDIS_URL=redis://redis:6379
+  #     - CORS_ORIGIN=http://localhost:3000
+  #   depends_on:
+  #     - postgres
+  #     - redis
+
+  # Placeholder para PostgreSQL (comentado)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: buildsynt-postgres
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     buildsynt-network:
+  #       ipv4_address: 172.20.0.30
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data:rw
+  #   environment:
+  #     - POSTGRES_DB=buildsynt
+  #     - POSTGRES_USER=buildsynt
+  #     - POSTGRES_PASSWORD=buildsynt123
+  #     - POSTGRES_INITDB_ARGS=--encoding=UTF8 --lc-collate=C --lc-ctype=C
+
+  # Placeholder para Redis (comentado)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: buildsynt-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     buildsynt-network:
+  #       ipv4_address: 172.20.0.40
+  #   volumes:
+  #     - redis_data:/data:rw
